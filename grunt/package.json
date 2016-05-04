@@ -1,0 +1,52 @@
+{
+  "name": "key_disabler",
+  "version": "1.0.0",
+  "description": "Lambda helper functions",
+  "main": "Gruntfile.js",
+  "dependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-exec": "^0.4.6",
+    "grunt-jsbeautifier": "^0.2.7"
+  },
+  "devDependencies": {
+    "grunt-bumpup": "^0.6.3",
+    "grunt-contrib-rename": "0.0.3",
+    "grunt-replace": "^0.11.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "ISC",
+  "key_disabler": {
+    "aws_account_number": "123456789012",
+    "first_warning": 80,
+    "last_warning": 89,
+    "expiry": 90,
+    "email": {
+      "report_to": "receipient@example.com",
+      "report_from": "sender@example.com",
+      "send_completion_report": "False"
+    },
+    "iam": {
+      "serviceaccount": "IAM_USERNAME_TO_EXCLUDE_IF_ANY",
+      "lambda": {
+        "rolename": "LambdaAccessKeyRotationRole",
+        "policyname": "LambdaAccessKeyRotationPolicy"
+      }
+    },
+    "lambda": {
+      "function_name": "AccessKeyRotation",
+      "memory": "128",
+      "timeout": "60",
+      "deployment_region": "us-west-2",
+      "schedule": {
+        "rulename": "EveryDay4amNZT",
+        "description": "Runs every day at 4am NZT",
+        "expression": "cron(0 16 * * ? *)"
+      }
+    }
+  }
+}
