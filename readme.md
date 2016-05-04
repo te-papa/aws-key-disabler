@@ -1,11 +1,11 @@
 # AWS Key disabler
 
-The AWS Key rotator is a Lambda function that disables AWS access keys after a set amount of time in order to reduce the risk associated with old access keys.
+The AWS Key disabler is a Lambda function that disables AWS access keys after a set amount of time in order to reduce the risk associated with old access keys.
 
 ## Current Limitations
 
-The key will only send to a designated address as EC2 accounts don't have an email address associated with them
-Keys are only disabled, not deleted or replaced
+* The key will only send to a designated address as EC2 accounts don't have an email address associated with them
+* Keys are only disabled, not deleted or replaced
 
 ## Prerequisites
 
