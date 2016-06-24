@@ -35,7 +35,7 @@ These instructions are for OSX. Your mileage may vary on Windows and other \*nix
 
 ## Troubleshooting
 
-This script is provided as is. We are happy to answer question as time allows but can't give any promises.
+This script is provided as is. We are happy to answer questions as time allows but can't give any promises.
 
 If things don't work ensure that:
 * Your connection to AWS is successful
