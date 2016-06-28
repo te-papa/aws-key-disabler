@@ -68,3 +68,17 @@ If things don't work ensure that:
 * You can authenticate successfully against AWS using the AWSCLI commandline tool
 * SES is not in sandbox mode and the sender domain has been verified
 * The selected region provides both Lambda and SES https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/
+
+## Bonus Points
+
+Once the Lambda Function has been successfully deployed - the following commands can be performed:
+
+1. `aws lambda list-functions`
+2. `openssl dgst -binary -sha256 ..\Releases\AccessKeyRotationPackage.1.0.18.zip | openssl base64`
+3. `aws lambda invoke --function-name AccessKeyRotation report.log --region us-east-1`
+4. `jq '.' report.log`
+
+## Bonus Bonus Points
+
+1. `jq 'def maximal_by(f): (map(f) | max) as $mx | .[] | select(f == $mx); .users | maximal_by(.keys[].age)' report.log`
+2. `jq 'def minimal_by(f): (map(f) | min) as $mn | .[] | select(f == $mn); .users | minimal_by(.keys[].age)' report.log`
