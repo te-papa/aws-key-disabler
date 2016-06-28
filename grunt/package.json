@@ -62,6 +62,6 @@
         "expression": "cron(0 16 * * ? *)"
       }
     },
-    "mask_accesskey_length": "15"
+    "mask_accesskey_length": "16"
   }
 }

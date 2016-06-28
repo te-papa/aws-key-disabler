@@ -36,6 +36,11 @@ KEY_STATE_INACTIVE = "Inactive"
 
 # ==========================================================
 
+#check to see if the MASK_ACCESS_KEY_LENGTH has been misconfigured
+if MASK_ACCESS_KEY_LENGTH > ACCESS_KEY_LENGTH:
+    MASK_ACCESS_KEY_LENGTH = 16
+
+# ==========================================================
 def tzutc():
     return dateutil.tz.tzutc()
 
@@ -108,17 +113,22 @@ def lambda_handler(event, context):
     data = client.list_users()
     print data
 
+    userindex = 0
+
     for user in data['Users']:
         userid = user['UserId']
         username = user['UserName']
         users[userid] = username
 
-    users_report = []
+    users_report1 = []
+    users_report2 = []
 
     for user in users:
+        userindex += 1
         user_keys = []
 
         print '---------------------'
+        print 'userindex %s' % userindex
         print 'user %s' % user
         username = users[user]
         print 'username %s' % username
@@ -172,20 +182,24 @@ def lambda_handler(event, context):
             key_info = {'accesskeyid': masked_access_key_id, 'age': age, 'state': key_state, 'changed': key_state_changed}
             user_keys.append(key_info)
 
-        user_info = {'username': username, 'keys': user_keys}
-        users_report.append(user_info)
+        user_info_with_username = {'userid': userindex, 'username': username, 'keys': user_keys}
+        user_info_without_username = {'userid': userindex, 'keys': user_keys}
+
+        users_report1.append(user_info_with_username)
+        users_report2.append(user_info_without_username)
 
     finished = str(datetime.now())
-    deactivated_report = {'reportdate': finished, 'users': users_report}
-    print 'deactivated_report %s ' % deactivated_report
+    deactivated_report1 = {'reportdate': finished, 'users': users_report1}
+    print 'deactivated_report1 %s ' % deactivated_report1
 
     if EMAIL_SEND_COMPLETION_REPORT:
-        send_completion_email(EMAIL_TO_ADMIN, finished, deactivated_report)
+        deactivated_report2 = {'reportdate': finished, 'users': users_report2}
+        send_completion_email(EMAIL_TO_ADMIN, finished, deactivated_report2)
 
     print '*****************************'
     print 'Completed (%s): %s' % (BUILD_VERSION, finished)
     print '*****************************'
-    return deactivated_report
+    return deactivated_report1
 
 #if __name__ == "__main__":
 #    event = 1
