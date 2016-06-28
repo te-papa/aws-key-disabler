@@ -55,19 +55,22 @@ These instructions are for OSX. Your mileage may vary on Windows and other \*nix
 5. Ensure you can successfully connect to AWS from the CLI, eg run `aws iam get-user` to verify successful connection
 6. from the `/grunt` directory run `grunt bumpup && grunt deployLambda` to bump your version number and perform a build/deploy of the Lambda function to the selected region
 
-## Invoke the Lambda Function from the commandline
+## Invoke the Lambda Function manually from the commandline using the AWSCLI
 
-Execute the lambda function by name `AccessKeyRotation`, logging the output of the scan to a file called `scan.report.log`:
+Execute the lambda function by name, `AccessKeyRotation`, logging the output of the scan to a file called `scan.report.log`:
 
 `aws lambda invoke --function-name AccessKeyRotation scan.report.log --region us-east-1`
-```{
+```javascript
+{
     "StatusCode": 200
-}```
+}
+```
 
 Use `jq` to render the contents of the `scan.report.log` to the console:
 
 `jq '.' scan.report.log`
-```{
+```javascript
+{
   "reportdate": "2016-06-26 10:37:24.071091",
   "users": [
     {
@@ -202,7 +205,8 @@ Use `jq` to render the contents of the `scan.report.log` to the console:
       ]
     }
   ]
-}```
+}
+```
 
 ## Additional configuration option
 
