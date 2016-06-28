@@ -1,6 +1,6 @@
 
 
-# AWS IAM Access Key Disabler
+# AWS Lambda - IAM Access Key Disabler
 
 ![Image of KeyIcon]
 (https://github.com/te-papa/aws-key-disabler/blob/3869f2a788d948fd962a51b51ff5389f3dbf5b3b/docs/images/GitHubTepapaKeyIcon.jpg)
