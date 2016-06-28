@@ -24,8 +24,8 @@ The AWS Key disabler is a Lambda function that disables AWS access keys after a 
 
 ## Current Limitations
 
-* The key will only send to a designated address as EC2 accounts don't have an email address associated with them
-* Keys are only disabled, not deleted or replaced
+* A report containing the output (json) of scan will be sent to a single defined sysadmin account, refer to the `report_to` attribute in the `/grunt/package.json` build configuration file.
+* Keys are only disabled, not deleted nor replaced
 
 ## Prerequisites
 
