@@ -32,7 +32,7 @@ The AWS Key disabler is a Lambda function that disables AWS access keys after a 
 This script requires the following components to run.
 * Node.js with NPM installed https://nodejs.org/en/
 * Gruntjs installed http://gruntjs.com/
-* aws-cli installed https://aws.amazon.com/cli/
+* AWSCLI commandline tool installed https://aws.amazon.com/cli/
 
 It also assumes that you have an AWS account with SES enabled, ie domain verified and sandbox mode removed.
 
