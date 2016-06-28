@@ -12,15 +12,15 @@ The AWS Key disabler is a Lambda function that disables AWS access keys after a 
 ![Image of Arch]
 (https://github.com/te-papa/aws-key-disabler/blob/master/docs/images/GitHubTepapaLambda.png)
 
-## Developer Toolchain
-
-![Image of Toolchain]
-(https://github.com/te-papa/aws-key-disabler/blob/master/docs/images/GitHubTepapaToolchain.png)
-
 ## SysOps Output for EndUser
 
 ![Image of iPhoneEmail]
 (https://github.com/te-papa/aws-key-disabler/blob/master/docs/images/GitHubTepapaOutput.png)
+
+## Developer Toolchain
+
+![Image of Toolchain]
+(https://github.com/te-papa/aws-key-disabler/blob/master/docs/images/GitHubTepapaToolchain.png)
 
 ## Current Limitations
 
