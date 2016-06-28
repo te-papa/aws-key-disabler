@@ -42,16 +42,19 @@ It also assumes that you have an AWS account with SES enabled, ie domain verifie
 These instructions are for OSX. Your mileage may vary on Windows and other \*nix.
 
 1. Grab yourself a copy of this script
-2. Fill in the following information in `/grunt/package.json`
+2. Navigate into the `/grunt` folder
+3. Setup the Grunt task runner, e.g. install its deps: `npm install`
+4. Fill in the following information in `/grunt/package.json`
 	1. Set the `aws_account_number` value to your AWS account id found on https://portal.aws.amazon.com/gp/aws/manageYourAccount
 	2. Set the `first_warning` and `last_warning` to the age that the key has to be in days to trigger a warning. These limits trigger an email send to `report_to`
 	3. Set the `expiry` to the age in days when the key expires. At this age the key is disabled and an email is triggered to `report_to` notifying this change
-	4. Set the `report_to` value to the email address you'd like to receive deletion reports to
-	5. Set the `report_from` value to the email address you'd like to use as the sender address for deletion reports. Note that the domain for this needs to be verified in AWS SES.
-	6. Set the `deployment_region` to a region that supports Lambda and SES. Also ensure that the region has SES sandbox mode disabled.
+	4. Set the `send_completion_report` value to `True` to enable email delivery via SES
+	5. Set the `report_to` value to the email address you'd like to receive deletion reports to
+	6. Set the `report_from` value to the email address you'd like to use as the sender address for deletion reports. Note that the domain for this needs to be verified in AWS SES.
+	7. Set the `deployment_region` to a region that supports Lambda and SES. Also ensure that the region has SES sandbox mode disabled.
 		* See the AWS Region table for support https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/
-3. Ensure you can successfully connect to AWS from the CLI, eg run `aws iam list-users` to verify successful connection
-4. from the `/grunt` directory run `grunt bumpup && grunt deployLambda` to bump your version number and deploy the script to the selected region
+5. Ensure you can successfully connect to AWS from the CLI, eg run `aws iam get-user` to verify successful connection
+6. from the `/grunt` directory run `grunt bumpup && grunt deployLambda` to bump your version number and build/deploy the Lambda function to the selected region
 
 ## Additional configuration option
 
