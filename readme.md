@@ -167,7 +167,7 @@ Use `jq` to render the contents of the `scan.report.log` to the console:
       "userid": "7",
        "keys": [
         {
-          "age": 598,
+          "age": 59,
           "changed": false,
           "state": "key is already in an INACTIVE state",
           "accesskeyid": "**************CSA123"
@@ -179,7 +179,7 @@ Use `jq` to render the contents of the `scan.report.log` to the console:
       "userid": "8",
        "keys": [
         {
-          "age": 605,
+          "age": 60,
           "changed": false,
           "state": "key is already in an INACTIVE state",
           "accesskeyid": "**************FDGD2"
@@ -191,13 +191,13 @@ Use `jq` to render the contents of the `scan.report.log` to the console:
       "userid": "9",
        "keys": [
         {
-          "age": 1028,
+          "age": 45,
           "changed": false,
           "state": "key is already in an INACTIVE state",
           "accesskeyid": "**************BLQ5GJ"
         },
         {
-          "age": 1130,
+          "age": 71,
           "changed": false,
           "state": "key is already in an INACTIVE state",
           "accesskeyid": "**************GJFF53"
