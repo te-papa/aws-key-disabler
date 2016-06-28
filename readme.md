@@ -33,6 +33,11 @@ These instructions are for OSX. Your mileage may vary on Windows and other \*nix
 3. Ensure you can successfully connect to AWS from the CLI, eg run `aws iam list-users` to verify successful connection
 4. from the `/grunt` directory run `grunt bumpup && grunt deployLambda` to bump your version number and deploy the script to the selected region
 
+## Additional configuration option
+
+* You can choose to set the message used for each warning and the final disabling by changing the values under key_disabler.keystates.<state>.message
+* You can change the length of masking under key_disabler.mask_accesskey_length. The access keys are 20 characters in length.
+
 ## Troubleshooting
 
 This script is provided as is. We are happy to answer questions as time allows but can't give any promises.
