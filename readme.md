@@ -77,6 +77,8 @@ Once the Lambda Function has been successfully deployed - the following commands
 2. `openssl dgst -binary -sha256 ..\Releases\AccessKeyRotationPackage.1.0.18.zip | openssl base64`
 3. `aws lambda invoke --function-name AccessKeyRotation report.log --region us-east-1`
 4. `jq '.' report.log`
+5. `jq '.users[] | select(.username=="johndoe")' report.log`
+5. `jq '.' report.log | grep age | cut -d':' -f2 | sort -n`
 
 ## Bonus Bonus Points
 
