@@ -1,3 +1,12 @@
+echo
+echo "**************************************************"
+echo "**************************************************"
+echo "DEPLOYING LAMBDA IAM Policy and Role..."
+echo "**************************************************"
+echo "**************************************************"
+echo
+SCRIPT=`basename "$0"`
+
 LAMBDA_POLICY_NAME=$1
 LAMBDA_ROLE_NAME=$2
 REGION=$3
@@ -6,11 +15,11 @@ echo running script with inputs:
 echo LAMBDA_POLICY_NAME=$LAMBDA_POLICY_NAME
 echo LAMBDA_ROLE_NAME=$LAMBDA_ROLE_NAME
 echo REGION=$REGION
-echo
-echo =====================================
+
+#=============================================
 
 echo
-echo STEP1:
+echo "STEP1: [${SCRIPT}]"
 echo creating IAM $LAMBDA_POLICY_NAME policy...
 
 EXISTS=$(aws iam list-policies --query "length(Policies[?PolicyName=='$LAMBDA_POLICY_NAME'])")
@@ -61,9 +70,10 @@ else
   echo $LAMBDA_ACCESS_KEY_ROTATION_POLICY_ARN
 fi
 
+#=============================================
+
 echo
-echo =====================================
-echo STEP2:
+echo "STEP2: [${SCRIPT}]"
 echo creating IAM $LAMBDA_ROLE_NAME role...
 
 EXISTS=$(aws iam list-roles --query "length(Roles[?RoleName=='$LAMBDA_ROLE_NAME'])")
@@ -96,9 +106,10 @@ else
   echo $LAMBDA_ACCESS_KEY_ROTATION_POLICY_ARN
 fi
 
+#=============================================
+
 echo
-echo =====================================
-echo STEP3:
+echo "STEP3: [${SCRIPT}]"
 echo attaching IAM $LAMBDA_POLICY_NAME policy to $LAMBDA_ROLE_NAME role...
 
 ATTACHED=$(aws iam list-attached-role-policies --role-name $LAMBDA_ROLE_NAME --query "length(AttachedPolicies[?PolicyName=='$LAMBDA_POLICY_NAME'])")
@@ -114,5 +125,11 @@ else
 fi
 
 echo
-echo =====================================
-echo DONE!!
+
+echo "**************************************************"
+echo "**************************************************"
+echo "SUCCESSFULLY deployed LAMBDA IAM Policy and Role!!"
+echo "**************************************************"
+echo "**************************************************"
+echo
+sleep 5

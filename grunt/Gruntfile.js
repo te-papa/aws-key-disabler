@@ -37,16 +37,36 @@ module.exports = function(grunt) {
               replacement: '<%= pkg.key_disabler.email.send_completion_report %>'
             },
             {
-              match: 'first_warning',
-              replacement: '<%= pkg.key_disabler.first_warning %>'
+              match: 'maskaccesskeylength',
+              replacement: '<%= pkg.key_disabler.mask_accesskey_length %>'
             },
             {
-              match: 'last_warning',
-              replacement: '<%= pkg.key_disabler.last_warning %>'
+              match: 'first_warning_num_days',
+              replacement: '<%= pkg.key_disabler.keystates.first_warning.days %>'
             },
             {
-              match: 'expiry',
-              replacement: '<%= pkg.key_disabler.expiry %>'
+              match: 'first_warning_message',
+              replacement: '<%= pkg.key_disabler.keystates.first_warning.message %>'
+            },
+            {
+              match: 'last_warning_num_days',
+              replacement: '<%= pkg.key_disabler.keystates.last_warning.days %>'
+            },
+            {
+              match: 'last_warning_message',
+              replacement: '<%= pkg.key_disabler.keystates.last_warning.message %>'
+            },
+            {
+              match: 'key_max_age_in_days',
+              replacement: '<%= pkg.key_disabler.keystates.expired.days %>'
+            },
+            {
+              match: 'key_expired_message',
+              replacement: '<%= pkg.key_disabler.keystates.expired.message %>'
+            },
+            {
+              match: 'key_young_message',
+              replacement: '<%= pkg.key_disabler.keystates.young.message %>'
             }
           ]
         },

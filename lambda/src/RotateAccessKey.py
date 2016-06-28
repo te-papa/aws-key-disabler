@@ -11,18 +11,30 @@ EMAIL_TO_ADMIN = '@@emailreportto'
 EMAIL_FROM = '@@emailreportfrom'
 EMAIL_SEND_COMPLETION_REPORT = ast.literal_eval('@@emailsendcompletionreport')
 
-# ==========================================================
+# Length of mask over the IAM Access Key
+MASK_ACCESS_KEY_LENGTH = ast.literal_eval('@@maskaccesskeylength')
 
 # First email warning
-FIRST_WARNING = @@first_warning
+FIRST_WARNING_NUM_DAYS = @@first_warning_num_days
+FIRST_WARNING_MESSAGE = '@@first_warning_message'
 # Last email warning
-LAST_WARNING = @@last_warning
-# Days to expiry
-EXPIRY = @@expiry
+LAST_WARNING_NUM_DAYS = @@last_warning_num_days
+LAST_WARNING_MESSAGE = '@@last_warning_message'
 
+# Max AGE days of key after which it is considered EXPIRED (deactivated)
+KEY_MAX_AGE_IN_DAYS = @@key_max_age_in_days
+KEY_EXPIRED_MESSAGE = '@@key_expired_message'
+
+KEY_YOUNG_MESSAGE = '@@key_young_message'
+
+# ==========================================================
+
+# Character length of an IAM Access Key
+ACCESS_KEY_LENGTH = 20
 KEY_STATE_ACTIVE = "Active"
 KEY_STATE_INACTIVE = "Inactive"
 
+# ==========================================================
 
 def tzutc():
     return dateutil.tz.tzutc()
@@ -81,6 +93,10 @@ def send_completion_email(email_to, finished, deactivated_report):
         })
 
 
+def mask_access_key(access_key):
+    return access_key[-(ACCESS_KEY_LENGTH-MASK_ACCESS_KEY_LENGTH):].rjust(len(access_key), "*")
+
+
 def lambda_handler(event, context):
     print '*****************************'
     print 'RotateAccessKey (%s): starting...' % BUILD_VERSION
@@ -116,7 +132,10 @@ def lambda_handler(event, context):
         for access_key in access_keys:
             print access_key
             access_key_id = access_key['AccessKeyId']
-            print 'AccessKeyId %s' % access_key_id
+
+            masked_access_key_id = mask_access_key(access_key_id)
+
+            print 'AccessKeyId %s' % masked_access_key_id
 
             existing_key_status = access_key['Status']
             print existing_key_status
@@ -129,35 +148,35 @@ def lambda_handler(event, context):
 
             # we only need to examine the currently Active and about to expire keys
             if existing_key_status == "Inactive":
-                key_state = 'key is already in INACTIVE state'
-                key_info = {'accesskeyid': access_key_id, 'age': age, 'state': key_state, 'changed': False}
+                key_state = 'key is already in an INACTIVE state'
+                key_info = {'accesskeyid': masked_access_key_id, 'age': age, 'state': key_state, 'changed': False}
                 user_keys.append(key_info)
                 continue
 
             key_state = ''
             key_state_changed = False
-            if age < FIRST_WARNING:
-                key_state = 'key is still young'
-            elif age == FIRST_WARNING:
-                key_state = 'key is due to expire in 1 week (7  days)'
-            elif age == LAST_WARNING:
-                key_state = 'key is due to expire in 1 day (tomorrow)'
-            elif age >= EXPIRY:
-                key_state = 'key is now expired! Changing key to INACTIVE state'
-                client.update_access_key(Username=username, AccessKeyId=access_key_id, Status=KEY_STATE_INACTIVE)
-                send_deactivate_email(EMAIL_TO_ADMIN, username, age, access_key_id)
+            if age < FIRST_WARNING_NUM_DAYS:
+                key_state = KEY_YOUNG_MESSAGE
+            elif age == FIRST_WARNING_NUM_DAYS:
+                key_state = FIRST_WARNING_MESSAGE
+            elif age == LAST_WARNING_NUM_DAYS:
+                key_state = LAST_WARNING_MESSAGE
+            elif age >= KEY_MAX_AGE_IN_DAYS:
+                key_state = KEY_EXPIRED_MESSAGE
+                client.update_access_key(UserName=username, AccessKeyId=access_key_id, Status=KEY_STATE_INACTIVE)
+                send_deactivate_email(EMAIL_TO_ADMIN, username, age, masked_access_key_id)
                 key_state_changed = True
 
             print 'key_state %s' % key_state
 
-            key_info = {'accesskeyid': access_key_id, 'age': age, 'state': key_state, 'changed': key_state_changed}
+            key_info = {'accesskeyid': masked_access_key_id, 'age': age, 'state': key_state, 'changed': key_state_changed}
             user_keys.append(key_info)
 
         user_info = {'username': username, 'keys': user_keys}
         users_report.append(user_info)
 
     finished = str(datetime.now())
-    deactivated_report = json.dumps({'reportdate': finished, 'users': users_report})
+    deactivated_report = {'reportdate': finished, 'users': users_report}
     print 'deactivated_report %s ' % deactivated_report
 
     if EMAIL_SEND_COMPLETION_REPORT:
@@ -166,7 +185,7 @@ def lambda_handler(event, context):
     print '*****************************'
     print 'Completed (%s): %s' % (BUILD_VERSION, finished)
     print '*****************************'
-    return True
+    return deactivated_report
 
 #if __name__ == "__main__":
 #    event = 1

@@ -1,3 +1,12 @@
+echo
+echo "**************************************************"
+echo "**************************************************"
+echo "DEPLOYING LAMBDA Function..."
+echo "**************************************************"
+echo "**************************************************"
+echo
+SCRIPT=`basename "$0"`
+
 LAMBDA_ZIP_PACKAGE_NAME=$1
 BUILD_VERSION=$2
 FUNCTION_NAME=$3
@@ -15,8 +24,8 @@ echo LAMBDA_TIMEOUT=$LAMBDA_TIMEOUT
 echo LAMBDA_MEMORY=$LAMBDA_MEMORY
 echo REGION=$REGION
 echo
-echo =====================================
 
+echo "STEP1: [${SCRIPT}]"
 echo deploying $LAMBDA_ZIP_PACKAGE_NAME version $BUILD_VERSION lambda ZIP package...
 echo
 
@@ -51,4 +60,11 @@ LAMBDA_FUNCTION_ARN=$(aws lambda create-function \
 echo LAMBDA_FUNCTION_ARN=$LAMBDA_FUNCTION_ARN
 
 echo
-echo DONE!
+
+echo "**************************************************"
+echo "**************************************************"
+echo "SUCCESSFULLY deployed LAMBDA Function ZIP Package!!"
+echo "**************************************************"
+echo "**************************************************"
+echo
+sleep 5

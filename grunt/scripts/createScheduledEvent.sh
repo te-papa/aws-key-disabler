@@ -1,3 +1,12 @@
+echo
+echo "**************************************************"
+echo "**************************************************"
+echo "DEPLOYING LAMBDA CRON Schedule Pattern..."
+echo "**************************************************"
+echo "**************************************************"
+echo
+SCRIPT=`basename "$0"`
+
 FUNCTION_NAME=$1
 SCHEDULE_RULE_NAME="$2"
 SCHEDULE_RULE_DESC="$3"
@@ -13,11 +22,11 @@ echo SCHEDULE_EXPRESSION="${SCHEDULE_EXPRESSION}"
 echo AWS_ACCOUNT_NUMBER=$AWS_ACCOUNT_NUMBER
 echo REGION=$REGION
 echo
-echo =====================================
 
+echo "STEP1: [${SCRIPT}]"
+echo creating event rule with CRON pattern...
 echo
-echo STEP1:
-echo =====================================
+
 EXISTS=$(aws events list-rules --region $REGION --output text --query "length(Rules[?Name=='$SCHEDULE_RULE_NAME'])")
 if [[ $EXISTS -eq 0 ]]; then
   EVENT_RULE_ARN=$(aws events put-rule \
@@ -36,8 +45,9 @@ else
 fi
 
 echo
-echo STEP2:
-echo =====================================
+echo "STEP2: [${SCRIPT}]"
+echo giving InvokeFunction permission to new EventRule...
+echo
 
 aws lambda add-permission \
   --function-name $FUNCTION_NAME \
@@ -48,8 +58,9 @@ aws lambda add-permission \
   --region $REGION
 
 echo
-echo STEP3:
-echo =====================================
+echo "STEP3: [${SCRIPT}]"
+echo binding new CRON schedule to new Lambda Function...
+echo
 
 aws events put-targets \
   --rule $SCHEDULE_RULE_NAME \
@@ -57,4 +68,11 @@ aws events put-targets \
   --region $REGION
 
 echo
-echo DONE!
+
+echo "**************************************************"
+echo "**************************************************"
+echo "SUCCESSFULLY deployed LAMBDA CRON Schedule Pattern!!"
+echo "**************************************************"
+echo "**************************************************"
+echo
+sleep 5
