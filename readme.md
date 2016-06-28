@@ -84,9 +84,9 @@ Use `jq` to render the contents of the `scan.report.log` to the console:
           "accesskeyid": "**************Q3GA1"
         },
         {
-          "age": 663,
+          "age": 12,
           "changed": false,
-          "state": "key is already in an INACTIVE state",
+          "state": "key is still young",
           "accesskeyid": "**************F3AA2"
         }
       ]
@@ -101,9 +101,9 @@ Use `jq` to render the contents of the `scan.report.log` to the console:
       "userid": "3",
        "keys": [
         {
-          "age": 296,
+          "age": 23,
           "changed": false,
-          "state": "key is already in an INACTIVE state",
+          "state": "key is due to expire in 1 week (7 days)",
           "accesskeyid": "**************DFG12"
         },
         {
@@ -119,9 +119,9 @@ Use `jq` to render the contents of the `scan.report.log` to the console:
       "userid": "4",
        "keys": [
         {
-          "age": 115,
-          "changed": false,
-          "state": "key is already in an INACTIVE state",
+          "age": 30,
+          "changed": true,
+          "state": "key is now EXPIRED! Changing key to INACTIVE state",
           "accesskeyid": "**************ER2E2"
         },
         {
@@ -137,9 +137,9 @@ Use `jq` to render the contents of the `scan.report.log` to the console:
       "userid": "5",
        "keys": [
         {
-          "age": 241,
+          "age": 30,
           "changed": false,
-          "state": "key is already in an INACTIVE state",
+          "state": "key is now EXPIRED! Changing key to INACTIVE state",
           "accesskeyid": "**************MGB41A"
         }
       ]
@@ -149,15 +149,15 @@ Use `jq` to render the contents of the `scan.report.log` to the console:
       "userid": "6",
        "keys": [
         {
-          "age": 578,
+          "age": 10,
           "changed": false,
-          "state": "key is already in an INACTIVE state",
+          "state": "key is still young",
           "accesskeyid": "**************ZDSQ5A"
         },
         {
-          "age": 578,
+          "age": 5,
           "changed": false,
-          "state": "key is already in an INACTIVE state",
+          "state": "key is still young",
           "accesskeyid": "**************E3ODA"
         }
       ]
