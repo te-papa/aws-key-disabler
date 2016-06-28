@@ -55,6 +55,151 @@ These instructions are for OSX. Your mileage may vary on Windows and other \*nix
 5. Ensure you can successfully connect to AWS from the CLI, eg run `aws iam get-user` to verify successful connection
 6. from the `/grunt` directory run `grunt bumpup && grunt deployLambda` to bump your version number and perform a build/deploy of the Lambda function to the selected region
 
+## Invoke the Lambda Function from the commandline
+
+`aws lambda invoke --function-name AccessKeyRotation scan.report.log --region us-east-1
+{
+    "StatusCode": 200
+}`
+
+`jq '.' scan.report.log
+{
+  "reportdate": "2016-06-26 10:37:24.071091",
+  "users": [
+    {
+      "username": "TestS3User",
+      "userid": "1",
+      "keys": [
+        {
+          "age": 72,
+          "changed": false,
+          "state": "key is already in an INACTIVE state",
+          "accesskeyid": "**************Q3GA1"
+        },
+        {
+          "age": 663,
+          "changed": false,
+          "state": "key is already in an INACTIVE state",
+          "accesskeyid": "**************F3AA2"
+        }
+      ]
+    },
+    {
+      "username": "BlahUser22",
+      "userid": "2",
+      "keys": []
+    },
+    {
+      "username": "LambdaFake1",
+      "userid": "3",
+       "keys": [
+        {
+          "age": 296,
+          "changed": false,
+          "state": "key is already in an INACTIVE state",
+          "accesskeyid": "**************DFG12"
+        },
+        {
+          "age": 296,
+          "changed": false,
+          "state": "key is already in an INACTIVE state",
+          "accesskeyid": "**************4ZASD"
+        }
+      ]
+    },
+    {
+      "username": "apiuser49",
+      "userid": "4",
+       "keys": [
+        {
+          "age": 115,
+          "changed": false,
+          "state": "key is already in an INACTIVE state",
+          "accesskeyid": "**************ER2E2"
+        },
+        {
+          "age": 107,
+          "changed": false,
+          "state": "key is already in an INACTIVE state",
+          "accesskeyid": "**************AWQ4K"
+        }
+      ]
+    },
+    {
+      "username": "UserEMRKinesis",
+      "userid": "5",
+       "keys": [
+        {
+          "age": 241,
+          "changed": false,
+          "state": "key is already in an INACTIVE state",
+          "accesskeyid": "**************MGB41A"
+        }
+      ]
+    },
+    {
+      "username": "CDN-Drupal",
+      "userid": "6",
+       "keys": [
+        {
+          "age": 578,
+          "changed": false,
+          "state": "key is already in an INACTIVE state",
+          "accesskeyid": "**************ZDSQ5A"
+        },
+        {
+          "age": 578,
+          "changed": false,
+          "state": "key is already in an INACTIVE state",
+          "accesskeyid": "**************E3ODA"
+        }
+      ]
+    },
+    {
+      "username": "ChocDonutUser1",
+      "userid": "7",
+       "keys": [
+        {
+          "age": 598,
+          "changed": false,
+          "state": "key is already in an INACTIVE state",
+          "accesskeyid": "**************CSA123"
+        }
+      ]
+    },
+    {
+      "username": "ChocDonut2",
+      "userid": "8",
+       "keys": [
+        {
+          "age": 605,
+          "changed": false,
+          "state": "key is already in an INACTIVE state",
+          "accesskeyid": "**************FDGD2"
+        }
+      ]
+    },
+    {
+      "username": "admin.skynet@cyberdyne.systems.com",
+      "userid": "9",
+       "keys": [
+        {
+          "age": 1028,
+          "changed": false,
+          "state": "key is already in an INACTIVE state",
+          "accesskeyid": "**************BLQ5GJ"
+        },
+        {
+          "age": 1130,
+          "changed": false,
+          "state": "key is already in an INACTIVE state",
+          "accesskeyid": "**************GJFF53"
+        }
+      ]
+    }
+  ]
+}`
+
 ## Additional configuration option
 
 * You can choose to set the message used for each warning and the final disabling by changing the values under `key_disabler.keystates.<state>.message`
