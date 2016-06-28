@@ -57,13 +57,17 @@ These instructions are for OSX. Your mileage may vary on Windows and other \*nix
 
 ## Invoke the Lambda Function from the commandline
 
-`aws lambda invoke --function-name AccessKeyRotation scan.report.log --region us-east-1
-{
-    "StatusCode": 200
-}`
+Execute the lambda function by name `AccessKeyRotation`, logging the output of the scan to a file called `scan.report.log`:
 
-`jq '.' scan.report.log
-{
+`aws lambda invoke --function-name AccessKeyRotation scan.report.log --region us-east-1`
+```{
+    "StatusCode": 200
+}```
+
+Use `jq` to render the contents of the `scan.report.log` to the console:
+
+`jq '.' scan.report.log`
+```{
   "reportdate": "2016-06-26 10:37:24.071091",
   "users": [
     {
@@ -198,7 +202,7 @@ These instructions are for OSX. Your mileage may vary on Windows and other \*nix
       ]
     }
   ]
-}`
+}```
 
 ## Additional configuration option
 
