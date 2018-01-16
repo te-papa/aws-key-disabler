@@ -6,6 +6,7 @@ import ast
 
 BUILD_VERSION = '@@buildversion'
 AWS_REGION = '@@deploymentregion'
+AWS_EMAIL_REGION = '@@emailregion'
 SERVICE_ACCOUNT_NAME = '@@serviceaccount'
 EMAIL_TO_ADMIN = '@@emailreportto'
 EMAIL_FROM = '@@emailreportfrom'
@@ -62,7 +63,7 @@ def key_age(key_created_date):
 
 
 def send_deactivate_email(email_to, username, age, access_key_id):
-    client = boto3.client('ses', region_name=AWS_REGION)
+    client = boto3.client('ses', region_name=AWS_EMAIL_REGION)
     response = client.send_email(
         Source=EMAIL_FROM,
         Destination={
@@ -81,7 +82,7 @@ def send_deactivate_email(email_to, username, age, access_key_id):
 
 
 def send_completion_email(email_to, finished, deactivated_report):
-    client = boto3.client('ses', region_name=AWS_REGION)
+    client = boto3.client('ses', region_name=AWS_EMAIL_REGION)
     response = client.send_email(
         Source=EMAIL_FROM,
         Destination={

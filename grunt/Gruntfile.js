@@ -34,6 +34,10 @@ module.exports = function(grunt) {
               replacement: '<%= pkg.key_disabler.email.report_to %>'
             },
             {
+              match: 'emailregion',
+              replacement: '<%= pkg.key_disabler.email.email_region %>'
+            },
+            {
               match: 'emailreportfrom',
               replacement: '<%= pkg.key_disabler.email.report_from %>'
             },

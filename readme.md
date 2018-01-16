@@ -48,7 +48,8 @@ These instructions are for OSX. Your mileage may vary on Windows and other \*nix
 	6. Set the `send_completion_report` value to `True` to enable email delivery via SES
 	7. Set the `report_to` value to the email address you'd like to receive deletion reports to
 	8. Set the `report_from` value to the email address you'd like to use as the sender address for deletion reports. Note that the domain for this needs to be verified in AWS SES.
-	9. Set the `deployment_region` to a region that supports Lambda and SES. Also ensure that the region has SES sandbox mode disabled.
+	9. Set the `deployment_region` to a region that supports Lambda. 
+	10 Set the `email_region` to the region that supports SES. Also ensure that the region has SES sandbox mode disabled.
 		* See the AWS Region table for support https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/
 5. Ensure you can successfully connect to AWS from the CLI, eg run `aws iam get-user` to verify successful connection
 6. from the `/grunt` directory run `grunt bumpup && grunt deployLambda` to bump your version number and perform a build/deploy of the Lambda function to the selected region

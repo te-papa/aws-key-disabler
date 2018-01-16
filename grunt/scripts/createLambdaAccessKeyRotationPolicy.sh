@@ -40,6 +40,7 @@ if [[ $EXISTS -eq 0 ]]; then
               'Effect': 'Allow',
               'Action': [
                   'iam:ListUsers',
+                  'iam:ListGroupsForUser',
                   'iam:ListAccessKeys',
                   'iam:UpdateAccessKey'
               ],

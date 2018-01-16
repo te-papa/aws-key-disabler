@@ -1,6 +1,6 @@
 {
   "name": "key_disabler",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Lambda helper functions",
   "main": "Gruntfile.js",
   "dependencies": {
@@ -40,6 +40,7 @@
       }
     },
     "email": {
+      "email_region": "us-west-2",
       "report_to": "receipient@example.com",
       "report_from": "sender@example.com",
       "send_completion_report": "False"
