@@ -10,6 +10,7 @@ SERVICE_ACCOUNT_NAME = '@@serviceaccount'
 EMAIL_TO_ADMIN = '@@emailreportto'
 EMAIL_FROM = '@@emailreportfrom'
 EMAIL_SEND_COMPLETION_REPORT = ast.literal_eval('@@emailsendcompletionreport')
+GROUP_LIST = "@@exclusiongroup"
 
 # Length of mask over the IAM Access Key
 MASK_ACCESS_KEY_LENGTH = ast.literal_eval('@@maskaccesskeylength')
@@ -132,6 +133,21 @@ def lambda_handler(event, context):
         print 'user %s' % user
         username = users[user]
         print 'username %s' % username
+
+        # test is a user belongs to a specific list of groups. If they do, do not invalidate the access key
+        print "Test if the user belongs to the exclusion group"
+        user_groups = client.list_groups_for_user(UserName=username)
+        skip = False
+        for groupName in user_groups['Groups']:
+            if groupName['GroupName'] == GROUP_LIST:
+                print 'Detected that user belongs to ', GROUP_LIST
+                skip = True
+                continue
+
+        if skip:
+            print "Do invalidate Access Key"
+            continue
+
 
         # check to see if the current user is a special service account
         if username == SERVICE_ACCOUNT_NAME:

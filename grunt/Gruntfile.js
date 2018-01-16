@@ -25,6 +25,11 @@ module.exports = function(grunt) {
               replacement: '<%= pkg.key_disabler.iam.serviceaccount %>'
             },
             {
+              match: 'exclusiongroup',
+              replacement: '<%= pkg.key_disabler.iam.exclusiongroup %>'
+
+            },
+            {
               match: 'emailreportto',
               replacement: '<%= pkg.key_disabler.email.report_to %>'
             },
