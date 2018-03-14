@@ -64,6 +64,8 @@ def key_age(key_created_date):
 
 def send_deactivate_email(email_to, username, age, access_key_id):
     client = boto3.client('ses', region_name=AWS_EMAIL_REGION)
+    data = 'The Access Key [%s] belonging to User [%s] has been automatically ' \
+           'deactivated due to it being %s days old' % (access_key_id, username, age)
     response = client.send_email(
         Source=EMAIL_FROM,
         Destination={
@@ -74,8 +76,8 @@ def send_deactivate_email(email_to, username, age, access_key_id):
                 'Data': 'AWS IAM Access Key Rotation - Deactivation of Access Key: %s' % access_key_id
             },
             'Body': {
-                'Html': {
-                'Data': 'The Access Key [%s] belonging to User [%s] has been automatically deactivated due to it being %s days old' % (access_key_id, username, age)
+                'Text': {
+                    'Data': data
                 }
             }
         })
@@ -83,6 +85,8 @@ def send_deactivate_email(email_to, username, age, access_key_id):
 
 def send_completion_email(email_to, finished, deactivated_report):
     client = boto3.client('ses', region_name=AWS_EMAIL_REGION)
+    data = 'AWS IAM Access Key Rotation Lambda Function (cron job) finished successfully at %s \n \n ' \
+           'Deactivation Report:\n%s' % (finished, json.dumps(deactivated_report, indent=4, sort_keys=True))
     response = client.send_email(
         Source=EMAIL_FROM,
         Destination={
@@ -93,8 +97,8 @@ def send_completion_email(email_to, finished, deactivated_report):
                 'Data': 'AWS IAM Access Key Rotation - Lambda Function'
             },
             'Body': {
-                'Html': {
-                'Data': 'AWS IAM Access Key Rotation Lambda Function (cron job) finished successfully at %s\n\nDeactivation Report:\n%s' % (finished, deactivated_report)
+                'Text': {
+                    'Data': data
                 }
             }
         })
