@@ -47,7 +47,7 @@
     },
     "iam": {
       "serviceaccount": "IAM_USERNAME_TO_EXCLUDE_IF_ANY",
-      "exclusiongroup":"group_name",
+      "exclusiongroup": "group_name",
       "lambda": {
         "rolename": "LambdaAccessKeyRotationRole",
         "policyname": "LambdaAccessKeyRotationPolicy"
