@@ -4,30 +4,30 @@ import dateutil.tz
 import json
 import ast
 
-BUILD_VERSION = '@@buildversion'
-AWS_REGION = '@@deploymentregion'
-AWS_EMAIL_REGION = '@@emailregion'
-SERVICE_ACCOUNT_NAME = '@@serviceaccount'
-EMAIL_TO_ADMIN = '@@emailreportto'
-EMAIL_FROM = '@@emailreportfrom'
-EMAIL_SEND_COMPLETION_REPORT = ast.literal_eval('@@emailsendcompletionreport')
-GROUP_LIST = "@@exclusiongroup"
+BUILD_VERSION = '1.1.14'
+AWS_REGION = 'us-east-1'
+AWS_EMAIL_REGION = 'us-east-1'
+SERVICE_ACCOUNT_NAME = 'IAM_USERNAME_TO_EXCLUDE_IF_ANY'
+EMAIL_TO_ADMIN = 'receipient@example.com'
+EMAIL_FROM = 'sender@example.com'
+EMAIL_SEND_COMPLETION_REPORT = ast.literal_eval('False')
+GROUP_LIST = "svc-accounts"
 
 # Length of mask over the IAM Access Key
-MASK_ACCESS_KEY_LENGTH = ast.literal_eval('@@maskaccesskeylength')
+MASK_ACCESS_KEY_LENGTH = ast.literal_eval('16')
 
 # First email warning
-FIRST_WARNING_NUM_DAYS = @@first_warning_num_days
-FIRST_WARNING_MESSAGE = '@@first_warning_message'
+FIRST_WARNING_NUM_DAYS = 83
+FIRST_WARNING_MESSAGE = 'key is due to expire in 1 week (7 days)'
 # Last email warning
-LAST_WARNING_NUM_DAYS = @@last_warning_num_days
-LAST_WARNING_MESSAGE = '@@last_warning_message'
+LAST_WARNING_NUM_DAYS = 89
+LAST_WARNING_MESSAGE = 'key is due to expire in 1 day (tomorrow)'
 
 # Max AGE days of key after which it is considered EXPIRED (deactivated)
-KEY_MAX_AGE_IN_DAYS = @@key_max_age_in_days
-KEY_EXPIRED_MESSAGE = '@@key_expired_message'
+KEY_MAX_AGE_IN_DAYS = 90
+KEY_EXPIRED_MESSAGE = 'key is now EXPIRED! Changing key to INACTIVE state'
 
-KEY_YOUNG_MESSAGE = '@@key_young_message'
+KEY_YOUNG_MESSAGE = 'key is still young'
 
 # ==========================================================
 
@@ -51,7 +51,7 @@ def key_age(key_created_date):
     tz_info = key_created_date.tzinfo
     age = datetime.now(tz_info) - key_created_date
 
-    print 'key age %s' % age
+    print('key age %s' % age)
 
     key_age_str = str(age)
     if 'days' not in key_age_str:
@@ -109,15 +109,15 @@ def mask_access_key(access_key):
 
 
 def lambda_handler(event, context):
-    print '*****************************'
-    print 'RotateAccessKey (%s): starting...' % BUILD_VERSION
-    print '*****************************'
+    print('*****************************')
+    print('RotateAccessKey (%s): starting...' % BUILD_VERSION)
+    print('*****************************')
     # Connect to AWS APIs
     client = boto3.client('iam')
 
     users = {}
-    data = client.list_users()
-    print data
+    data = client.list_users(MaxItems=999)
+    print(data)
 
     userindex = 0
 
@@ -133,49 +133,49 @@ def lambda_handler(event, context):
         userindex += 1
         user_keys = []
 
-        print '---------------------'
-        print 'userindex %s' % userindex
-        print 'user %s' % user
+        print('---------------------')
+        print('userindex %s' % userindex)
+        print('user %s' % user)
         username = users[user]
-        print 'username %s' % username
+        print('username %s' % username)
 
         # test is a user belongs to a specific list of groups. If they do, do not invalidate the access key
-        print "Test if the user belongs to the exclusion group"
+        print("Test if the user belongs to the exclusion group")
         user_groups = client.list_groups_for_user(UserName=username)
         skip = False
         for groupName in user_groups['Groups']:
             if groupName['GroupName'] == GROUP_LIST:
-                print 'Detected that user belongs to ', GROUP_LIST
+                print('Detected that user belongs to ', GROUP_LIST)
                 skip = True
                 continue
 
         if skip:
-            print "Do invalidate Access Key"
+            print("Do invalidate Access Key")
             continue
 
 
         # check to see if the current user is a special service account
         if username == SERVICE_ACCOUNT_NAME:
-            print 'detected special service account %s, skipping account...', username
+            print('detected special service account %s, skipping account...', username)
             continue
 
         access_keys = client.list_access_keys(UserName=username)['AccessKeyMetadata']
         for access_key in access_keys:
-            print access_key
+            print(access_key)
             access_key_id = access_key['AccessKeyId']
 
             masked_access_key_id = mask_access_key(access_key_id)
 
-            print 'AccessKeyId %s' % masked_access_key_id
+            print('AccessKeyId %s' % masked_access_key_id)
 
             existing_key_status = access_key['Status']
-            print existing_key_status
+            print(existing_key_status)
 
             key_created_date = access_key['CreateDate']
-            print 'key_created_date %s' % key_created_date
+            print('key_created_date %s' % key_created_date)
 
             age = key_age(key_created_date)
-            print 'age %s' % age
+            print('age %s' % age)
 
             # we only need to examine the currently Active and about to expire keys
             if existing_key_status == "Inactive":
@@ -195,10 +195,10 @@ def lambda_handler(event, context):
             elif age >= KEY_MAX_AGE_IN_DAYS:
                 key_state = KEY_EXPIRED_MESSAGE
                 client.update_access_key(UserName=username, AccessKeyId=access_key_id, Status=KEY_STATE_INACTIVE)
-                send_deactivate_email(EMAIL_TO_ADMIN, username, age, masked_access_key_id)
+                #send_deactivate_email(EMAIL_TO_ADMIN, username, age, masked_access_key_id)
                 key_state_changed = True
 
-            print 'key_state %s' % key_state
+            print('key_state %s' % key_state)
 
             key_info = {'accesskeyid': masked_access_key_id, 'age': age, 'state': key_state, 'changed': key_state_changed}
             user_keys.append(key_info)
@@ -211,15 +211,15 @@ def lambda_handler(event, context):
 
     finished = str(datetime.now())
     deactivated_report1 = {'reportdate': finished, 'users': users_report1}
-    print 'deactivated_report1 %s ' % deactivated_report1
+    print('deactivated_report1 %s ' % deactivated_report1)
 
     if EMAIL_SEND_COMPLETION_REPORT:
         deactivated_report2 = {'reportdate': finished, 'users': users_report2}
         send_completion_email(EMAIL_TO_ADMIN, finished, deactivated_report2)
 
-    print '*****************************'
-    print 'Completed (%s): %s' % (BUILD_VERSION, finished)
-    print '*****************************'
+    print('*****************************')
+    print('Completed (%s): %s' % (BUILD_VERSION, finished))
+    print('*****************************')
     return deactivated_report1
 
 #if __name__ == "__main__":
